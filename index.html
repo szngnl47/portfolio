@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simon Zenginel · Web Developer</title>
+<style>
+  :root{
+    --ink:#14171F;
+    --ink-soft:#40454F;
+    --muted:#767c86;
+    --paper:#FAFAF9;
+    --paper-alt:#F1F2EF;
+    --accent:#1F6F5C;
+    --accent-soft:#E9F2EF;
+    --line:#E4E5E1;
+    --mono: 'JetBrains Mono','Liberation Mono','DejaVu Sans Mono',monospace;
+    --sans: 'Poppins','Liberation Sans',Arial,sans-serif;
+    --body: 'Liberation Sans',Arial,sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--body);
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.6;
+    font-size:16px;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  img{max-width:100%; display:block;}
+  section{padding:110px 0;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 32px;}
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--accent);
+    font-weight:700;
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px; height:1px;
+    background:var(--accent);
+    display:inline-block;
+  }
+  h1,h2,h3{font-family:var(--sans); font-weight:700; letter-spacing:-0.5px;}
+
+  /* ---------------- NAV ---------------- */
+  #nav{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(250,250,249,0.82);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid transparent;
+    transition:border-color .3s ease;
+  }
+  #nav.scrolled{ border-bottom:1px solid var(--line); }
+  .nav-inner{
+    max-width:1080px; margin:0 auto; padding:0 32px;
+    height:68px; display:flex; align-items:center; justify-content:space-between;
+  }
+  .nav-logo{
+    font-family:var(--mono); font-weight:700; font-size:14.5px;
+    letter-spacing:0.5px;
+  }
+  .nav-logo span{color:var(--accent);}
+  .nav-links{ display:flex; gap:34px; list-style:none; }
+  .nav-links a{
+    font-family:var(--mono); font-size:12.5px; letter-spacing:0.8px;
+    text-transform:uppercase; text-decoration:none; color:var(--ink-soft);
+    position:relative; padding-bottom:3px;
+  }
+  .nav-links a::after{
+    content:""; position:absolute; left:0; bottom:0; width:0; height:1.5px;
+    background:var(--accent); transition:width .25s ease;
+  }
+  .nav-links a:hover::after{ width:100%; }
+  .nav-cta{
+    font-family:var(--mono); font-size:12px; letter-spacing:0.5px;
+    border:1px solid var(--ink); color:var(--ink); text-decoration:none;
+    padding:8px 16px; border-radius:3px; transition:all .2s ease;
+  }
+  .nav-cta:hover{ background:var(--ink); color:var(--paper); }
+
+  /* ---------------- HERO ---------------- */
+  #hero{
+    min-height:100vh; display:flex; align-items:center;
+    padding-top:68px; position:relative; overflow:hidden;
+  }
+  .hero-grid{
+    display:grid; grid-template-columns:1.3fr 1fr; gap:60px; align-items:center;
+  }
+  .hero-kicker{
+    font-family:var(--mono); font-size:13px; letter-spacing:2px;
+    text-transform:uppercase; color:var(--accent); font-weight:700;
+    margin-bottom:22px;
+  }
+  .hero-name{
+    font-size:clamp(42px,6vw,74px); line-height:1.02; margin-bottom:20px;
+  }
+  .hero-role{
+    font-family:var(--mono); font-size:16px; color:var(--ink-soft);
+    margin-bottom:30px; line-height:1.7; max-width:520px;
+  }
+  .hero-actions{ display:flex; gap:16px; flex-wrap:wrap; }
+  .btn{
+    font-family:var(--mono); font-size:13px; letter-spacing:0.4px;
+    text-decoration:none; padding:13px 24px; border-radius:3px;
+    display:inline-flex; align-items:center; gap:8px; transition:all .2s ease;
+  }
+  .btn-solid{ background:var(--ink); color:var(--paper); }
+  .btn-solid:hover{ background:var(--accent); }
+  .btn-outline{ border:1px solid var(--line); color:var(--ink); }
+  .btn-outline:hover{ border-color:var(--ink); }
+
+  .hero-panel{
+    aspect-ratio:1/1.05;
+    background:linear-gradient(155deg,#14171F 0%, #1F6F5C 130%);
+    border-radius:6px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 30px 60px -20px rgba(20,23,31,0.35);
+  }
+  .hero-panel .chrome{
+    height:34px; background:rgba(255,255,255,0.06);
+    display:flex; align-items:center; gap:6px; padding:0 14px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .hero-panel .chrome span{ width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.25); }
+  .hero-code{
+    font-family:var(--mono); font-size:12.5px; color:rgba(255,255,255,0.78);
+    padding:24px; line-height:2;
+  }
+  .hero-code .c1{color:#7fd9c4;}
+  .hero-code .c2{color:#e8b183;}
+  .hero-code .c3{color:#9aa4b5;}
+  .hero-code .indent{ padding-left:20px; }
+
+  /* ---------------- ABOUT ---------------- */
+  #about{ background:var(--paper-alt); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .about-grid{ display:grid; grid-template-columns:1fr 1fr; gap:70px; }
+  .about-text p{ color:var(--ink-soft); font-size:16px; margin-bottom:16px; max-width:480px; }
+  .about-text strong{ color:var(--ink); }
+  .stat-row{ display:flex; gap:36px; margin-top:34px; flex-wrap:wrap; }
+  .stat b{ font-family:var(--sans); font-size:30px; display:block; color:var(--ink); }
+  .stat span{ font-family:var(--mono); font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; }
+
+  .skill-block{ margin-bottom:22px; }
+  .skill-block h4{
+    font-family:var(--mono); font-size:11px; letter-spacing:1.2px;
+    text-transform:uppercase; color:var(--muted); margin-bottom:10px; font-weight:700;
+  }
+  .chip-set{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{
+    font-family:var(--mono); font-size:12px; color:var(--ink);
+    background:#fff; border:1px solid var(--line); border-radius:20px;
+    padding:6px 13px;
+  }
+  .chip.on{ background:var(--accent-soft); border-color:#c9e2da; color:var(--accent); }
+
+  .timeline{ margin-top:8px; }
+  .t-item{ border-left:2px solid var(--line); padding-left:20px; padding-bottom:26px; position:relative; }
+  .t-item:last-child{ padding-bottom:0; }
+  .t-item::before{
+    content:""; position:absolute; left:-6.5px; top:2px;
+    width:11px; height:11px; border-radius:50%; background:var(--paper-alt);
+    border:2px solid var(--accent);
+  }
+  .t-date{ font-family:var(--mono); font-size:11px; color:var(--muted); letter-spacing:0.5px; }
+  .t-role{ font-family:var(--sans); font-weight:700; font-size:16px; margin:4px 0 3px; }
+  .t-co{ color:var(--accent); font-weight:700; }
+  .t-desc{ color:var(--ink-soft); font-size:14.5px; max-width:460px; }
+
+  /* ---------------- PROJECTS ---------------- */
+  .section-head{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:54px; flex-wrap:wrap; gap:20px; }
+  .section-head h2{ font-size:clamp(30px,4vw,42px); }
+  .section-lede{ color:var(--muted); max-width:360px; font-size:14.5px; }
+
+  .proj{
+    display:grid; grid-template-columns:64px 1fr; gap:28px;
+    padding:44px 0; border-bottom:1px solid var(--line);
+  }
+  .proj:first-child{ padding-top:0; }
+  .proj:last-child{ border-bottom:none; }
+  .proj-index{
+    font-family:var(--mono); font-size:13px; color:var(--muted); padding-top:6px;
+  }
+  .proj-body h3{ font-size:24px; margin-bottom:6px; }
+  .proj-sub{ font-family:var(--mono); font-size:12.5px; color:var(--accent); margin-bottom:16px; letter-spacing:0.3px; }
+  .proj-desc{ color:var(--ink-soft); font-size:15px; margin-bottom:20px; max-width:640px; }
+  .proj-chips{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px; }
+  .proj-link{
+    font-family:var(--mono); font-size:12.5px; text-decoration:none;
+    color:var(--ink); border-bottom:1px solid var(--ink); padding-bottom:2px;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .proj-link:hover{ color:var(--accent); border-color:var(--accent); }
+
+
+  .project-shot{
+    margin:18px 0 22px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    overflow:hidden;
+    background:#fff;
+    box-shadow:0 18px 45px -28px rgba(20,23,31,0.38);
+  }
+  .project-shot::before{
+    content:"";
+    display:block;
+    height:28px;
+    background:linear-gradient(90deg,#f6f6f4,#fff);
+    border-bottom:1px solid var(--line);
+  }
+  .project-shot img{
+    width:100%;
+    height:310px;
+    object-fit:cover;
+    object-position:top center;
+  }
+
+  /* ---------------- CONTACT ---------------- */
+  #contact{ background:var(--ink); color:var(--paper); }
+  #contact .eyebrow{ color:#7fd9c4; }
+  #contact .eyebrow::before{ background:#7fd9c4; }
+  #contact h2{ color:var(--paper); font-size:clamp(32px,5vw,52px); max-width:640px; margin-bottom:26px; }
+  #contact .lede{ color:rgba(250,250,249,0.6); max-width:480px; margin-bottom:50px; font-size:16px; }
+  .contact-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:30px; }
+  .c-card{
+    border:1px solid rgba(250,250,249,0.14); border-radius:6px; padding:26px;
+    transition:border-color .2s ease;
+  }
+  .c-card:hover{ border-color:rgba(127,217,196,0.55); }
+  .c-card h4{
+    font-family:var(--mono); font-size:11px; letter-spacing:1.2px;
+    text-transform:uppercase; color:rgba(250,250,249,0.45); margin-bottom:12px;
+  }
+  .c-card a, .c-card p{ font-family:var(--sans); font-size:16.5px; font-weight:600; text-decoration:none; color:var(--paper); }
+  .c-card a:hover{ color:#7fd9c4; }
+
+  footer{
+    border-top:1px solid rgba(250,250,249,0.12); margin-top:70px; padding-top:26px;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    font-family:var(--mono); font-size:11.5px; color:rgba(250,250,249,0.4);
+  }
+
+  .reveal{ opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+
+  @media (max-width:860px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .hero-panel{ display:none; }
+    .about-grid{ grid-template-columns:1fr; gap:50px; }
+    .proj{ grid-template-columns:1fr; }
+    .proj-index{ padding-top:0; }
+    .project-shot img{ height:220px; }
+    .contact-grid{ grid-template-columns:1fr; }
+    .nav-links{ display:none; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .reveal{ opacity:1; transform:none; transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">SIMON<span>.</span>ZENGINEL</div>
+    <ul class="nav-links">
+      <li><a href="#hero">Start</a></li>
+      <li><a href="#about">Über mich</a></li>
+      <li><a href="#projects">Projekte</a></li>
+      <li><a href="#contact">Kontakt</a></li>
+    </ul>
+    <a class="nav-cta" href="mailto:simonzenginel@gmail.com">Kontakt aufnehmen</a>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="hero-kicker">Web Developer</div>
+      <h1 class="hero-name">Hallo, ich bin<br>Simon Zenginel.</h1>
+      <p class="hero-role">Ich baue und pflege CMS und Onlineshops, die technisch sauber und optisch stimmig sind, von der Vorlage in Figma bis zum laufenden Betrieb.</p>
+      <div class="hero-actions">
+        <a class="btn btn-solid" href="#projects">Projekte ansehen →</a>
+        <a class="btn btn-outline" href="#contact">Kontakt aufnehmen</a>
+      </div>
+    </div>
+    <div class="hero-panel">
+      <div class="chrome"><span></span><span></span><span></span></div>
+      <div class="hero-code">
+        <div><span class="c3">const</span> <span class="c1">developer</span> = {</div>
+        <div class="indent"><span class="c2">name:</span> "Simon Zenginel",</div>
+        <div class="indent"><span class="c2">base:</span> "Aachen, DE",</div>
+        <div class="indent"><span class="c2">stack:</span> ["WordPress","Webflow","Shopware","Shopify","TYPO3"],</div>
+        <div class="indent"><span class="c2">projects:</span> "30+",</div>
+        <div class="indent"><span class="c2">status:</span> "verfügbar"</div>
+        <div>};</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <div class="eyebrow">01 · Über mich</div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>Ich bin Webentwickler mit <strong>B.Sc. in Computer Engineering (RWTH Aachen)</strong> und über zwei Jahren Praxiserfahrung bei der <strong>Löwenstark Digital Group</strong>, einer der größten Digitalagenturen im DACH Raum. Dort habe ich Onlineshops und Unternehmenswebsites auf WordPress, Shopware, Shopify und TYPO3 technisch betreut, von der ersten Zeile Code bis zum Livegang.</p>
+        <p>Regelmäßig arbeite ich mit WordPress und Webflow: responsive Umsetzung von Designs aus Figma, individuelle Theme und CMS Entwicklung sowie die saubere Integration externer Dienste. Ich arbeite strukturiert, dokumentiere meine Arbeit und bin es gewohnt, als technische Schnittstelle zwischen Design und Marketing zu vermitteln.</p>
+        <p>Neben klassischer Arbeit im Frontend und Backend (HTML, CSS, PHP, SQL, JavaScript) nutze ich Tools mit künstlicher Intelligenz wie Claude und Cursor gezielt, um Entwicklungsprozesse schneller und zuverlässiger zu machen.</p>
+
+        <div class="stat-row">
+          <div class="stat"><b>30+</b><span>Projekte umgesetzt</span></div>
+          <div class="stat"><b>2+</b><span>Jahre Agenturerfahrung</span></div>
+          <div class="stat"><b>4</b><span>CMS und Shopsysteme</span></div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="skill-block">
+          <h4>Plattformen</h4>
+          <div class="chip-set">
+            <span class="chip">WordPress</span>
+            <span class="chip">Webflow</span>
+            <span class="chip">Shopware</span>
+            <span class="chip">Shopify</span>
+            <span class="chip">TYPO3</span>
+            <span class="chip">Storyblok</span>
+          </div>
+        </div>
+        <div class="skill-block">
+          <h4>Frontend</h4>
+          <div class="chip-set">
+            <span class="chip">HTML</span>
+            <span class="chip">CSS / SCSS</span>
+            <span class="chip">JavaScript (ES6+)</span>
+            <span class="chip">Liquid</span>
+            <span class="chip">Responsive Design</span>
+            <span class="chip">WCAG</span>
+          </div>
+        </div>
+        <div class="skill-block">
+          <h4>Backend und Daten</h4>
+          <div class="chip-set">
+            <span class="chip">PHP</span>
+            <span class="chip">SQL</span>
+            <span class="chip">REST APIs</span>
+            <span class="chip">Python</span>
+          </div>
+        </div>
+        <div class="skill-block">
+          <h4>Workflow</h4>
+          <div class="chip-set">
+            <span class="chip">Figma</span>
+            <span class="chip">Git / GitHub</span>
+            <span class="chip">Jira</span>
+            <span class="chip">Asana</span>
+            <span class="chip">Notion</span>
+          </div>
+        </div>
+
+        <div class="timeline" style="margin-top:34px;">
+          <div class="t-item">
+            <div class="t-date">01/2024 bis 03/2026</div>
+            <div class="t-role">Web Developer <span class="t-co">· Löwenstark Digital Group</span></div>
+            <div class="t-desc">Technische Umsetzung und Betreuung von 30+ Onlineshop Frontends. Braunschweig (remote).</div>
+          </div>
+          <div class="t-item">
+            <div class="t-date">10/2022 bis 10/2025</div>
+            <div class="t-role">B.Sc. Computer Engineering <span class="t-co">· RWTH Aachen</span></div>
+            <div class="t-desc">Abschlussarbeit: Vergleichende Auswertung von Raytracing Werkzeugen für die Simulation drahtloser Netzwerke.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">02 · Ausgewählte Projekte</div>
+        <h2>Live Projekte aus der<br>Agenturpraxis.</h2>
+      </div>
+      <p class="section-lede">Eine Auswahl von Websites, an deren technischer Umsetzung, Pflege oder Relaunch ich bei Löwenstark Digital Group mitgewirkt habe.</p>
+    </div>
+
+    <div class="proj reveal">
+      <div class="proj-index">01</div>
+      <div class="proj-body">
+        <h3>Gartenmetall</h3>
+        <div class="proj-sub">Metal Garden Objects & Urban Furniture · Shopware 6</div>
+        <div class="project-shot"><img src="portfolio_assets/gartenmetall.jpg" alt="Screenshot der Gartenmetall Website"></div>
+        <p class="proj-desc">Laufende technische Betreuung des Onlineshops in Shopware 6: Aktualisierung von Frontend Komponenten und CMS Bausteinen, Anpassung bestehender Funktionen an neue Anforderungen sowie Datenpflege mittels SQL. Jedes Update wurde vor dem Livegang qualitätsgesichert und im Team über Jira abgestimmt.</p>
+        <div class="proj-chips">
+          <span class="chip on">Shopware 6</span><span class="chip">PHP</span><span class="chip">SQL</span><span class="chip">QA und Wartung</span>
+        </div>
+        <a class="proj-link" href="https://www.gartenmetall.de" target="_blank" rel="noopener">Website ansehen ↗</a>
+      </div>
+    </div>
+
+    <div class="proj reveal">
+      <div class="proj-index">02</div>
+      <div class="proj-body">
+        <h3>Aston Martin Hamburg</h3>
+        <div class="proj-sub">Nord Ostsee Automobile · WordPress</div>
+        <div class="project-shot"><img src="portfolio_assets/aston.jpg" alt="Screenshot der Aston Martin Hamburg Website"></div>
+        <p class="proj-desc">Technische Weiterentwicklung des bestehenden Systems auf Basis von WordPress: individuelle Anpassungen an Theme und Produktdarstellung, Umsetzung neuer Vorgaben aus Figma in responsive Komponenten sowie regelmäßige System und Sicherheitsupdates.</p>
+        <div class="proj-chips">
+          <span class="chip on">WordPress</span><span class="chip">PHP</span><span class="chip">Umsetzung aus Figma</span><span class="chip">Wartung</span>
+        </div>
+        <a class="proj-link" href="https://astonmartin-hamburg.com" target="_blank" rel="noopener">Website ansehen ↗</a>
+      </div>
+    </div>
+
+    <div class="proj reveal">
+      <div class="proj-index">03</div>
+      <div class="proj-body">
+        <h3>KEW, kochen. essen. wohnen.</h3>
+        <div class="proj-sub">Hochwertige Küchenutensilien · Relaunch Shopware 5 zu 6</div>
+        <div class="project-shot"><img src="portfolio_assets/kew.jpg" alt="Screenshot der KEW Website"></div>
+        <p class="proj-desc">Vollständiger Relaunch des Onlineshops: Migration der Plattform von Shopware 5 auf Shopware 6, Neuaufbau der Struktur von Theme und CMS sowie Übernahme und Bereinigung der Produktdaten per SQL. Vor dem Livegang wurde der komplette Shop funktional und optisch qualitätsgesichert.</p>
+        <div class="proj-chips">
+          <span class="chip on">Shopware 6</span><span class="chip">Migration</span><span class="chip">SQL</span><span class="chip">Relaunch</span>
+        </div>
+        <a class="proj-link" href="https://www.kochen-essen-wohnen.de" target="_blank" rel="noopener">Website ansehen ↗</a>
+      </div>
+    </div>
+
+    <div class="proj reveal">
+      <div class="proj-index">04</div>
+      <div class="proj-body">
+        <h3>Fürstenberg Porzellan</h3>
+        <div class="proj-sub">Porzellanmanufaktur seit 1747 · Relaunch von WordPress zu Shopware 6</div>
+        <div class="project-shot"><img src="portfolio_assets/fuerstenberg.jpg" alt="Screenshot der Fürstenberg Website"></div>
+        <p class="proj-desc">Plattform Relaunch des Onlineshops: Migration von WordPress auf Shopware 6, technische Umsetzung des neuen responsiven Storefronts nach Design aus Figma sowie Integration externer Dienste für Zahlungs und Versandprozesse.</p>
+        <div class="proj-chips">
+          <span class="chip on">Shopware 6</span><span class="chip">WordPress</span><span class="chip">Migration</span><span class="chip">Externe Integrationen</span>
+        </div>
+        <a class="proj-link" href="https://www.fuerstenberg-porzellan.com" target="_blank" rel="noopener">Website ansehen ↗</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="eyebrow">03 · Kontakt</div>
+    <h2>Lass uns über eine Zusammenarbeit sprechen.</h2>
+    <p class="lede">Ich bin offen für neue Aufgaben im Bereich Webentwicklung, ob Festanstellung, Projekt oder Freelance.</p>
+
+    <div class="contact-grid">
+      <div class="c-card">
+        <h4>E Mail</h4>
+        <a href="mailto:simonzenginel@gmail.com">simonzenginel@gmail.com</a>
+      </div>
+      <div class="c-card">
+        <h4>Telefon</h4>
+        <a href="tel:+491782832381">+49 178 283 2381</a>
+      </div>
+      <div class="c-card">
+        <h4>Standort</h4>
+        <p>Aachen, Deutschland</p>
+      </div>
+    </div>
+
+    <footer>
+      <div>© 2026 Simon Zenginel</div>
+      <div><a href="https://linkedin.com/in/simon-zenginel" target="_blank" rel="noopener">linkedin.com/in/simon-zenginel</a></div>
+    </footer>
+  </div>
+</section>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 10);
+  });
+
+  const els = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, {threshold:0.15});
+    els.forEach(el=>io.observe(el));
+  } else {
+    els.forEach(el=>el.classList.add('in'));
+  }
+</script>
+
+</body>
+</html>
